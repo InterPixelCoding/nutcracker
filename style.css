@@ -1,0 +1,102 @@
+@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap');
+
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --corner-smoothing: 0.5rem;
+}
+
+body {
+    background: rgb(40, 40, 40);
+    color: rgb(233, 233, 233);
+    font-family: 'Libre Baskerville', serif;
+    padding: 2.5rem;
+    gap: 2.5rem;
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    transition: all 200ms ease;
+    overflow-x: hidden;
+}
+
+p {font-weight: 100;}
+
+.video-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    background: transparent;
+    box-shadow: inset 0 0 1rem black,
+                0 .3rem 1rem rgb(0, 0, 0);
+    border: 1px solid rgb(200, 200, 200);
+    border-radius: var(--corner-smoothing);
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+}
+
+body:has(.video-container.video-fullscreen) {gap: 0; padding: 0; margin: 0;}
+
+.video-container.video-fullscreen {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background: rgb(30, 30, 30);
+    border: none;
+}
+
+.video-fullscreen > video {
+    height: 100%;
+    object-fit: contain;
+}
+
+.video-container > .fullscreen {
+    cursor: pointer;
+    position: absolute;
+    right: .5rem;
+    bottom: .5rem;
+    width: 3rem;
+    height: 3rem;
+    background: transparent;
+    border: none;
+    height: fit-content;
+}
+
+.video-container > video {max-width: 100%;}
+.video-container > * {grid-area: 1 / 1;}
+.mute {
+    font-size: 1rem; 
+    margin: 1rem;
+    padding: 1rem;
+    margin-top: auto;
+    background: rgba(255,255,255, 0.3);
+    border: none;
+    cursor: pointer;
+    z-index: 100;
+    color: white;
+    font-family: 'Libre Baskerville', serif;
+    width: fit-content;
+    border-radius: var(--corner-smoothing);
+}
+
+.letter {
+    min-height: 0%;
+    display: flex;
+    flex-direction: column;
+    padding: 2.5rem;
+    gap: 2.5rem;
+    background: rgba(0,0,0,0.2);
+    border: 1px solid rgb(200, 200, 200);
+    border-radius: var(--corner-smoothing);
+    box-shadow: 0 .3rem 1rem rgb(0, 0, 0);
+}
+
+.letter > h2 {margin-top: auto;}
+
+@media (max-width: 1000px) {
+    body {grid-template-columns: auto; grid-template-rows: auto;}
+    .video-container {width: 100%;}
+}
