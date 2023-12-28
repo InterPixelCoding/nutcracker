@@ -7,7 +7,7 @@
 }
 
 :root {
-    --corner-smoothing: 0.5rem;
+    --corner-smoothing: 0.25rem;
 }
 
 body {
@@ -68,10 +68,11 @@ body:has(.video-container.video-fullscreen) {gap: 0; padding: 0; margin: 0;}
 .video-container > video {max-width: 100%;}
 .video-container > * {grid-area: 1 / 1;}
 .mute {
-    font-size: 1rem; 
+    position: absolute;
+    bottom: 0;
     margin: 1rem;
+    font-size: 1rem; 
     padding: 1rem;
-    margin-top: auto;
     background: rgba(255,255,255, 0.3);
     border: none;
     cursor: pointer;
