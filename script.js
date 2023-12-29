@@ -18,10 +18,16 @@ function controls() {
         })
     })
     fullscreens.forEach(fullscreen => {
+        let parent = fullscreen.parentElement;
         fullscreen.addEventListener("click", () => {
-            console.log('click!');
-            let parent = fullscreen.parentElement;
             parent.classList.toggle('video-fullscreen');
+            if(parent.classList.contains('video-fullscreen')) {
+                console.log('entering fullscreen')
+                parent.requestFullscreen();
+            } else {
+                console.log('exiting fullscreen')
+                document.exitFullscreen();
+            }
         })
     })
 }
@@ -87,11 +93,16 @@ function create_card(recipient, letter, random_string) {
     const video_container = create_element("div", "video-container");
 
     const video = create_element("video", "video");
-    video.setAttribute("mute", "true");
-    video.setAttribute("autoplay", "true");
+    video.setAttribute("muted", "true");
     video.setAttribute("loop", "true");
 
     video.src = './pexels_videos_1437396 (2160p).mp4';
+
+    const play_video = create_element("button", "play-button");
+    const play_img = create_element("img", "play-image");
+    play_img.src = './play-button.png';
+
+    play_video.addEventListener("click", () => {video.play(); play_video.remove();})
 
     const mute = create_element("button", "mute");
     mute.textContent = 'Play Audio';
@@ -108,7 +119,7 @@ function create_card(recipient, letter, random_string) {
     const letter_container = create_element("div", "letter");
 
     const heading = create_element("h1", "heading");
-    heading.textContent = `Dear ${recipient},`;
+    heading.textContent = `Dear  ${recipient},`;
 
     const paragraph = create_element("p", "par");
     paragraph.textContent = letter;
@@ -118,10 +129,11 @@ function create_card(recipient, letter, random_string) {
 
     const subheading = create_element("h2", "subheading");
     subheading.textContent = 'Love from Blake';
-
     
+    play_video.appendChild(play_img)
+
     fullscreen_container.appendChild(fullscreen_svg);
-    append_children(video_container, [video, mute, fullscreen_container])
+    append_children(video_container, [video, mute, fullscreen_container, play_video])
     container.appendChild(video_container);
 
     append_children(letter_container, [heading, paragraph, send_off, subheading])
