@@ -12,14 +12,45 @@
 
 body {
     background: rgb(40, 40, 40);
+    height: 100vh;
+    width: 100%;
+    overflow-x: hidden;
+    display: grid;
+    place-content: center;
+}
+
+.loading {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.loading > img {
+    animation: spin-loop 1s linear infinite;
+    height: fit-content;
+    z-index: -100;
+}
+
+.letters-container {
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    gap: 10vh;
+    padding: 2.5rem;
+    background: rgb(40, 40, 40);
     color: rgb(233, 233, 233);
     font-family: 'Libre Baskerville', serif;
-    padding: 2.5rem;
+    overflow-x: hidden;
+    transition: all 200ms ease;
+    animation: slide-in 1.5s 2.5s ease forwards;
+}
+
+.card {
     gap: 2.5rem;
     display: grid;
     grid-template-columns: 3fr 1fr;
-    transition: all 200ms ease;
-    overflow-x: hidden;
 }
 
 p {font-weight: 100;}
@@ -88,16 +119,37 @@ body:has(.video-container.video-fullscreen) {gap: 0; padding: 0; margin: 0;}
     display: flex;
     flex-direction: column;
     padding: 2.5rem;
-    gap: 2.5rem;
     background: rgba(0,0,0,0.2);
     border: 1px solid rgb(200, 200, 200);
     border-radius: var(--corner-smoothing);
     box-shadow: 0 .3rem 1rem rgb(0, 0, 0);
 }
 
-.letter > h2 {margin-top: auto;}
+.letter > p.par {margin-block: 2.5rem;}
 
-@media (max-width: 1000px) {
-    body {grid-template-columns: auto; grid-template-rows: auto;}
+.letter > h2 {margin-top: 1.125rem;}
+
+.send-off {margin-top: auto;}
+
+@media (max-width: 1024px) {
+    .card {grid-template-columns: auto;}
+    .letters-container {flex-direction: column;}
     .video-container {width: 100%;}
+}
+
+@keyframes spin-loop {
+    0% {transform: rotate(0deg)}
+    100% {transform: rotate(360deg)};
+}
+
+@keyframes buffer {
+    0% {opacity: 0;}
+    80% {opacity: 0;}
+    100% {opacity: 1;}
+}
+
+@keyframes slide-in {
+    0% {transform: translateY(-100vh)}
+    20% {opacity: 1;}
+    100% {transform: translateY(0vh); opacity: 1;}
 }
