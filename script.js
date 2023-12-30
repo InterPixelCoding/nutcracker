@@ -1,3 +1,39 @@
+const slides = [
+    {file: null, 
+    description: `
+        The video that was meant to show here has not been rendered yet. 
+        In 3D Design, rendering is the process of calculating the colour of each pixel
+        based on a series of complex light bounces. Unfortunately, for a project this huge
+        (with over 17,000,000 triangles!), it will take a considerable amount of time to complete
+        (I'm talking 6 days). You will be notified by Blake once the rendering has processed and you can
+        watch the infinite theatre in all its glory! Click on the arrows to view the rendered stills from the scene.
+    `
+    },
+    {file: './slideshow-images/preview/0054.png', 
+    description: `
+        Main view of the Theatre
+    `
+    },
+    {file: './slideshow-images/preview/0055.png', 
+    description: `
+        Point of View: Row K, seat 15
+    `
+    },
+    {file: './slideshow-images/preview/0056.png', 
+    description: `
+        Closeup of the Nutcrackers as they enjoy 
+        their premium seating in the box, both standing 12 feet tall!
+    `
+    },
+    {file: './slideshow-images/preview/0057.png', 
+    description: `
+        Point of View: Second box on the right of the theatre
+    `
+    }
+]
+
+let slide = 0;
+
 function controls() {
     const sound_buttons = document.querySelectorAll(".mute");
     const audio = document.createElement("audio");
@@ -22,12 +58,42 @@ function controls() {
         fullscreen.addEventListener("click", () => {
             parent.classList.toggle('video-fullscreen');
             if(parent.classList.contains('video-fullscreen')) {
-                console.log('entering fullscreen')
                 parent.requestFullscreen();
             } else {
-                console.log('exiting fullscreen')
                 document.exitFullscreen();
             }
+        })
+    })
+}
+
+function create_carousel(slides_arr, slides_container) {
+    for(let i = 0; i<2; i++) {    
+        slides_arr.forEach(slide => {
+        const slide_container = create_element("div", "slide");
+
+        const image_container = create_element("div", "image-container");
+        const image_description = create_element("span", "image-description");
+
+        if(slide.file == undefined) {
+            image_container.style.background = 'rgba(255, 255, 255, 0.2)';
+            image_description.classList.add('center-text');
+        } else {
+            image_container.style.backgroundImage = `url(${slide.file})`
+        }
+        image_description.textContent = slide.description;
+
+        append_children(slide_container, [image_container, image_description])
+        slides_container.appendChild(slide_container)
+    })}    
+
+    slides_container.style.width = `${slides_arr.length * 200}%`
+}
+
+function fix_widths(el_arr) {
+    el_arr.forEach(el_query => {
+        const els = document.querySelectorAll(el_query);
+        els.forEach(el => {
+            el.style.width = el.offsetWidth + 'px'
         })
     })
 }
@@ -49,6 +115,7 @@ function type_writer(text_query, speed, timeout) {
 }
 
 function anims() {
+    fix_widths(['.heading', 'p.par', 'p.send-off', 'h2'])
     type_writer('.heading', 80, 1000);
     type_writer('p.par', 20, 4000);
     type_writer('p.send-off', 20, 6000);
@@ -90,32 +157,12 @@ function create_card(recipient, letter, random_string) {
     const container = create_element("div", "card");
     container.setAttribute("id", random_string)
 
-    const video_container = create_element("div", "video-container");
+    const slide_container = create_element("div", "slides-container");
 
-    const video = create_element("video", "video");
-    video.setAttribute("muted", "true");
-    video.setAttribute("loop", "true");
+    const slide_wrapper = create_element("div", "slides-wrapper")
 
-    video.src = './pexels_videos_1437396 (2160p).mp4';
-
-    const play_video = create_element("button", "play-button");
-    const play_img = create_element("img", "play-image");
-    play_img.src = './play-button.png';
-
-    play_video.addEventListener("click", () => {video.play(); play_video.remove();})
-
-    const mute = create_element("button", "mute");
-    mute.textContent = 'Play Audio';
-
-    const fullscreen_container = create_element("button", "fullscreen");
-
-    const fullscreen_svg = create_element("svg", "fullscreen-svg");
-    fullscreen_svg.innerHTML = `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-        <path fill="none" stroke="white" stroke-width="1.5" d="M18.25 10V5.75H14M18.25 14v4.25H14m-4 0H5.75V14m0-4V5.75H10"></path>
-    </svg>
-    `
-
+    create_carousel(slides, slide_container)
+    
     const letter_container = create_element("div", "letter");
 
     const heading = create_element("h1", "heading");
@@ -130,17 +177,79 @@ function create_card(recipient, letter, random_string) {
     const subheading = create_element("h2", "subheading");
     subheading.textContent = 'Love from Blake';
     
-    play_video.appendChild(play_img)
+    // const video_container = create_video('./pexels_videos_1437396 (2160p).mp4');
+    // slide_container.appendChild(video_container);
 
-    fullscreen_container.appendChild(fullscreen_svg);
-    append_children(video_container, [video, mute, fullscreen_container, play_video])
-    container.appendChild(video_container);
+    const back_button = create_element("img", "back-btn");
+    back_button.src = './backwards.png';
+
+    const forward_button = create_element("img", "forward-btn");
+    forward_button.src = './forwards.png';
+
+    const controls = create_element("div", "carousel-controls");
+
+    append_children(controls, [back_button, forward_button])
+
+    append_children(slide_wrapper, [slide_container, controls])
+    container.appendChild(slide_wrapper);
 
     append_children(letter_container, [heading, paragraph, send_off, subheading])
     container.appendChild(letter_container);
 
     letters_container.appendChild(container);
+
+    // controls logic
+    setTimeout(() => {
+        const transform_el =  document.querySelector('.slides-container');
+        const slide_percentage = transform_el.offsetWidth / (slides.length) / 2;
+        const image_description = document.querySelectorAll('.image-description');
+        console.log(slide_percentage)
+
+        back_button.addEventListener("click", () => {
+            slide--; 
+            if(slide < 0) {slide = slides.length - 1}
+            transform_el.style.transform = `translateX(${-slide_percentage * slide}px)`;
+        });
+        forward_button.addEventListener("click", () => {
+            slide++; 
+            if(slide > slides.length - 1) {slide = 0}
+            transform_el.style.transform = `translateX(${-slide_percentage * slide}px)`;
+        });
+    }, 200);    
 }
+
+function create_video(src) {
+    const video_container = create_element("div", "video-container");
+
+    const video = create_element("video", "video");
+    video.setAttribute("muted", "true");
+    video.setAttribute("loop", "true");
+
+    video.src = src;
+
+    const play_video = create_element("button", "play-button");
+    const play_img = create_element("img", "play-image");
+    play_img.src = './play-button.png';
+    
+    play_video.addEventListener("click", () => {video.play(); play_video.remove();})
+    
+    const mute = create_element("button", "mute");
+    mute.textContent = 'Play Audio';
+    
+    const fullscreen_container = create_element("button", "fullscreen");
+    
+    const fullscreen_svg = create_element("svg", "fullscreen-svg");
+    fullscreen_svg.innerHTML = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path fill="none" stroke="white" stroke-width="1.5" d="M18.25 10V5.75H14M18.25 14v4.25H14m-4 0H5.75V14m0-4V5.75H10"></path>
+    </svg>
+    `
+    play_video.appendChild(play_img)
+    fullscreen_container.appendChild(fullscreen_svg);
+    append_children(video_container, [video, mute, fullscreen_container, play_video])
+
+    return video_container;
+}   
 
 function highlight_target_element() {
     // Get the hash value from the URL

@@ -72,6 +72,7 @@ p {font-weight: 100;}
     border: 1px solid rgb(200, 200, 200);
     border-radius: var(--corner-smoothing);
     aspect-ratio: 16 / 9;
+    max-height: 100%;
     overflow: hidden;
 }
 
@@ -144,7 +145,7 @@ p {font-weight: 100;}
     border: none;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1400px) {
     .card {grid-template-columns: auto;}
     .letters-container {flex-direction: column;}
     .video-container {width: 100%;}
