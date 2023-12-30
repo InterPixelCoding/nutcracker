@@ -9,23 +9,23 @@ const slides = [
         watch the infinite theatre in all its glory! Click on the arrows to view the rendered stills from the scene.
     `
     },
-    {file: './slideshow-images/preview/0054.png', 
+    {file: './slideshow-images/real/1.png', 
     description: `
         Main view of the Theatre
     `
     },
-    {file: './slideshow-images/preview/0055.png', 
+    {file: './slideshow-images/real/2.png', 
     description: `
         Point of View: Row K, seat 15
     `
     },
-    {file: './slideshow-images/preview/0056.png', 
+    {file: './slideshow-images/real/3.png', 
     description: `
         Closeup of the Nutcrackers as they enjoy 
         their premium seating in the box, both standing 12 feet tall!
     `
     },
-    {file: './slideshow-images/preview/0057.png', 
+    {file: './slideshow-images/real/4.png', 
     description: `
         Point of View: Second box on the right of the theatre
     `
@@ -66,24 +66,44 @@ function controls() {
     })
 }
 
+function add_description(slide, image_container, image_description) {
+    if(slide.file == undefined) {
+        image_container.style.background = 'rgba(255, 255, 255, 0.2)';
+        image_description.classList.add('center-text');
+    } else {
+        image_container.style.backgroundImage = `url(${slide.file})`
+    }
+    image_description.textContent = slide.description;
+}
+
 function create_carousel(slides_arr, slides_container) {
-    for(let i = 0; i<2; i++) {    
+    for(let i = 0; i<2; i++) { 
         slides_arr.forEach(slide => {
-        const slide_container = create_element("div", "slide");
+            const slide_container = create_element("div", "slide");
+            
+            const image_container = create_element("div", "image-container");
+            const image_description = create_element("span", "image-description");
+            
+            add_description(slide, image_container, image_description)
 
-        const image_container = create_element("div", "image-container");
-        const image_description = create_element("span", "image-description");
+            append_children(slide_container, [image_container, image_description])
+            slides_container.appendChild(slide_container)
 
-        if(slide.file == undefined) {
-            image_container.style.background = 'rgba(255, 255, 255, 0.2)';
-            image_description.classList.add('center-text');
-        } else {
-            image_container.style.backgroundImage = `url(${slide.file})`
-        }
-        image_description.textContent = slide.description;
-
-        append_children(slide_container, [image_container, image_description])
-        slides_container.appendChild(slide_container)
+            if(is_landscape() === false && i === 0) {
+                if(max_width(700)) {
+                    image_description.textContent = 'Please turn your phone to landscape mode to view the slideshow';
+                    let buttons;
+                    setTimeout(() => {
+                        buttons = document.querySelector('.carousel-controls');
+                        buttons.style.opacity = '0';
+                        window.addEventListener("orientationchange", () => {
+                            auto_widths(['.heading', 'p.par', 'p.send-off', 'h2']);
+                            buttons.style.opacity = '1';
+                            add_description(slide, image_container, image_description)
+                        })
+                    }, 2000);
+                }
+            }   
     })}    
 
     slides_container.style.width = `${slides_arr.length * 200}%`
@@ -94,6 +114,15 @@ function fix_widths(el_arr) {
         const els = document.querySelectorAll(el_query);
         els.forEach(el => {
             el.style.width = el.offsetWidth + 'px'
+        })
+    })
+}
+
+function auto_widths(el_arr) {
+    el_arr.forEach(el_query => {
+        const els = document.querySelectorAll(el_query);
+        els.forEach(el => {
+            el.style.width = 'auto'
         })
     })
 }
@@ -120,6 +149,15 @@ function anims() {
     type_writer('p.par', 20, 4000);
     type_writer('p.send-off', 20, 6000);
     type_writer('h2', 80, 8000);
+    setTimeout(() => {
+        if(max_width(700)) {
+            auto_widths(['.heading', 'p.par', 'p.send-off', 'h2'])
+        }
+    }, 9000);
+}
+
+function max_width(width) {
+    return width > document.body.offsetWidth;
 }
 
 function create_element(type, class_name) {
@@ -193,28 +231,48 @@ function create_card(recipient, letter, random_string) {
     append_children(slide_wrapper, [slide_container, controls])
     container.appendChild(slide_wrapper);
 
-    append_children(letter_container, [heading, paragraph, send_off, subheading])
+    append_children(letter_container, [heading, paragraph, send_off, subheading]);
     container.appendChild(letter_container);
 
     letters_container.appendChild(container);
 
     // controls logic
     setTimeout(() => {
-        const transform_el =  document.querySelector('.slides-container');
-        const slide_percentage = transform_el.offsetWidth / (slides.length) / 2;
-        const image_description = document.querySelectorAll('.image-description');
-        console.log(slide_percentage)
+        if(screen.orientation.type === 'landscape-primary') {
+            console.log('landscape')
+            const transform_el =  document.querySelector('.slides-container');
+            let slide_percentage = transform_el.offsetWidth / (slides.length) / 2;
 
-        back_button.addEventListener("click", () => {
-            slide--; 
-            if(slide < 0) {slide = slides.length - 1}
-            transform_el.style.transform = `translateX(${-slide_percentage * slide}px)`;
-        });
-        forward_button.addEventListener("click", () => {
-            slide++; 
-            if(slide > slides.length - 1) {slide = 0}
-            transform_el.style.transform = `translateX(${-slide_percentage * slide}px)`;
-        });
+            back_button.addEventListener("click", () => {
+                slide--; 
+                if(slide < 0) {slide = slides.length - 1}
+                transform_el.style.transform = `translateX(${-slide_percentage * slide}px)`;
+            });
+            forward_button.addEventListener("click", () => {
+                slide++; 
+                if(slide > slides.length - 1) {slide = 0}
+                transform_el.style.transform = `translateX(${-slide_percentage * slide}px)`;
+            });
+        } else {
+        window.addEventListener("orientationchange", () => {
+            console.log('landscape')
+            setTimeout(() => {
+                const transform_el =  document.querySelector('.slides-container');
+                let slide_percentage = transform_el.offsetWidth / (slides.length) / 2;
+
+                back_button.addEventListener("click", () => {
+                    slide--; 
+                    if(slide < 0) {slide = slides.length - 1}
+                    transform_el.style.transform = `translateX(${-slide_percentage * slide}px)`;
+                });
+                forward_button.addEventListener("click", () => {
+                    slide++; 
+                    if(slide > slides.length - 1) {slide = 0}
+                    transform_el.style.transform = `translateX(${-slide_percentage * slide}px)`;
+                });
+            }, 300);
+        })
+        }
     }, 200);    
 }
 
@@ -246,7 +304,7 @@ function create_video(src) {
     `
     play_video.appendChild(play_img)
     fullscreen_container.appendChild(fullscreen_svg);
-    append_children(video_container, [video, mute, fullscreen_container, play_video])
+    append_children(video_container, [video, mute, fullscreen_container, play_video]);
 
     return video_container;
 }   
@@ -270,6 +328,12 @@ function highlight_target_element() {
     return targetElement;
 }
 
+function is_landscape() {
+    const client_width = document.body.offsetWidth;
+    const client_height = document.body.offsetHeight;
+    return client_width > client_height;
+}
+
 fetch_data('cards.json')
 .then(data => {
     const letters = Array.from(data);
@@ -284,6 +348,8 @@ setTimeout(() => {
     controls();
 
     highlight_target_element();
+    const loading = document.querySelector('.loading');
+    loading.remove();
     const other_els = document.querySelectorAll('.card:not(.highlight)')
     other_els.forEach(el => {el.style.display = 'none'})
 }, 2000);
