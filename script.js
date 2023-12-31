@@ -329,7 +329,6 @@ setTimeout(() => {
 
     highlight_target_element();
     const loading = document.querySelector('.loading');
-    loading.remove();
     const other_els = document.querySelectorAll('.card:not(.highlight)')
     other_els.forEach(el => {el.style.display = 'none'})
 }, 2000);
