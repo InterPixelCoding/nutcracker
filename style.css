@@ -48,7 +48,7 @@ body {
     color: rgb(233, 233, 233);
     font-family: 'Libre Baskerville', serif;
     transition: all 200ms ease;
-    animation: slide-in 1.5s 2.5s ease forwards;
+    animation: slide-in 1.5s 3.5s ease forwards;
 }
 
 .card {

@@ -150,9 +150,8 @@ function anims() {
     type_writer('p.send-off', 20, 6000);
     type_writer('h2', 80, 8000);
     setTimeout(() => {
-        if(max_width(700)) {
-            auto_widths(['.heading', 'p.par', 'p.send-off', 'h2'])
-        }
+        if(max_width(700))
+        auto_widths(['.heading', 'p.par', 'p.send-off', 'h2'])
     }, 9000);
 }
 
@@ -238,41 +237,22 @@ function create_card(recipient, letter, random_string) {
 
     // controls logic
     setTimeout(() => {
-        if(screen.orientation.type === 'landscape-primary') {
-            console.log('landscape')
-            const transform_el =  document.querySelector('.slides-container');
+        back_button.addEventListener("click", () => {
+            const parent_el = back_button.parentElement.parentElement;
+            const transform_el = parent_el.children[0];
             let slide_percentage = transform_el.offsetWidth / (slides.length) / 2;
-
-            back_button.addEventListener("click", () => {
-                slide--; 
-                if(slide < 0) {slide = slides.length - 1}
-                transform_el.style.transform = `translateX(${-slide_percentage * slide}px)`;
-            });
-            forward_button.addEventListener("click", () => {
-                slide++; 
-                if(slide > slides.length - 1) {slide = 0}
-                transform_el.style.transform = `translateX(${-slide_percentage * slide}px)`;
-            });
-        } else {
-        window.addEventListener("orientationchange", () => {
-            console.log('landscape')
-            setTimeout(() => {
-                const transform_el =  document.querySelector('.slides-container');
-                let slide_percentage = transform_el.offsetWidth / (slides.length) / 2;
-
-                back_button.addEventListener("click", () => {
-                    slide--; 
-                    if(slide < 0) {slide = slides.length - 1}
-                    transform_el.style.transform = `translateX(${-slide_percentage * slide}px)`;
-                });
-                forward_button.addEventListener("click", () => {
-                    slide++; 
-                    if(slide > slides.length - 1) {slide = 0}
-                    transform_el.style.transform = `translateX(${-slide_percentage * slide}px)`;
-                });
-            }, 300);
-        })
-        }
+            slide--; 
+            if(slide < 0) {slide = slides.length - 1}
+            transform_el.style.transform = `translateX(${-slide_percentage * slide}px)`;
+        });
+        forward_button.addEventListener("click", () => {
+            const parent_el = back_button.parentElement.parentElement;
+            const transform_el = parent_el.children[0];
+            let slide_percentage = transform_el.offsetWidth / (slides.length) / 2;
+            slide++; 
+            if(slide > slides.length - 1) {slide = 0}
+            transform_el.style.transform = `translateX(${-slide_percentage * slide}px)`;
+        });
     }, 200);    
 }
 

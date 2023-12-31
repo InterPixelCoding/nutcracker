@@ -21,12 +21,17 @@
     },
     {
         "name": "Peter",
-        "letter": "Thank you so much for the",
+        "letter": "Thank you so much for the book token! There are a few books which I would like to buy so I will let you know which one I decide on!",
         "random_string": "cepSJypXKW"
     },
     {
         "name": "Eamonn",
         "letter": "Thank you so much for the",
         "random_string": "YvaGhHyPpA"
+    },
+    {
+        "name": "Rozzipozzy",
+        "letter": "Thank you for testing out my website! Your top looks very nice!",
+        "random_string": "xuZHMhKbrp"
     }
 ]
