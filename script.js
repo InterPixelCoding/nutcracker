@@ -5,7 +5,7 @@ const slides = [
         In 3D Design, rendering is the process of calculating the colour of each pixel
         based on a series of complex light bounces. Unfortunately, for a project this huge
         (with over 17,000,000 triangles!), it will take a considerable amount of time to complete
-        (I'm talking 6 days). You will be notified by Blake once the rendering has processed and you can
+        (I'm talking 20 days). You will be notified by Blake once the rendering has processed and you can
         watch the infinite theatre in all its glory! Click on the arrows to view the rendered stills from the scene.
     `
     },
